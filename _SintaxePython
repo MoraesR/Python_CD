@@ -1,0 +1,405 @@
+"""Sintaxe Python
+
+Esta documentação foi projetada para guiar programadores 
+e estudantes de Ciência da Computação e Inteligência Artificial através dos fundamentos da sintaxe Python, 
+transitando progressivamente para padrões intermediários e soluções de nível avançado de engenharia de software."""
+
+"""
+MÓDULO 1: NÍVEL BÁSICO (Fundamentos e Controle de Fluxo)
+O Python é uma linguagem de tipagem dinâmica, forte e orientada a objetos, 
+cuja principal característica visual é o uso de indentação obrigatória (geralmente 4 espaços) para delimitar blocos lógicos, 
+eliminando chaves {} ou palavras-chave como begin/end.
+"""
+
+
+
+#1.1 Variáveis e Tipos Primitivos
+#Em Python, você não declara o tipo da variável explicitamente. 
+# O interpretador infere o tipo em tempo de execução.
+
+# Inteiro (int) e Ponto Flutuante (float)
+idade = 25
+taxa_amostragem = 0.005
+
+# Texto (str) e Booleano (bool)
+modulo = "Inteligência Artificial"
+sistema_ativo = True
+
+# Verificação de tipo
+print(type(idade))            # <class 'int'>
+print(type(taxa_amostragem))  # <class 'float'>
+
+# Conversão de tipos (Casting)
+valor_texto = "1024"
+valor_numerico = int(valor_texto)
+taxa_arredondada = int(taxa_amostragem)  # Trunca para 0
+
+
+#1.2 Formatação de Strings (f-strings)
+#A partir do Python 3.6, as f-strings são o padrão da indústria para interpolação limpa e de alta performance.
+
+nome_servidor = "SRV-MANAUS-01"
+latencia_ms = 14.8954
+
+# Interpolação com arredondamento inline (.2f = duas casas decimais)
+mensagem = f"Status: {nome_servidor} operacional com latência de {latencia_ms:.2f}ms."
+print(mensagem)
+# Saída: Status: SRV-MANAUS-01 operacional com latência de 14.90ms.
+
+
+#1.3 Estruturas Condicionais (if, elif, else)
+#Os operadores lógicos em Python são escritos por extenso: and, or e not.
+
+temperatura_cpu = 82.5
+
+if temperatura_cpu > 85.0:
+    print("ALERTA CRÍTICO: Thermal Throttling iminente!")
+elif temperatura_cpu >= 75.0 and temperatura_cpu <= 85.0:
+    print("AVISO: Carga térmica elevada. Acionando ventoinhas no máximo.")
+else:
+    print("NORMAL: Temperatura dentro dos limites de operação.")
+
+
+#1.4 Estruturas de Repetição (for e while)
+#O laço for itera diretamente sobre coleções ou sequências geradas pelo range(início, fim_exclusivo, passo).
+
+# Iteração com range
+for i in range(1, 6):
+    print(f"Tentativa de conexão {i}...")
+
+# Iteração sobre listas
+sensores = ["pH", "Turbidez", "Oxigênio"]
+for sensor in sensores:
+    print(f"Checando integridade do sensor: {sensor}")
+
+# Laço com controle de parada
+tentativas = 0
+limite_maximo = 3
+while tentativas < limite_maximo:
+    print(f"Processando ping de telemetria... (Tentativa {tentativas + 1})")
+    tentativas += 1
+
+
+#1.5 Funções Básicas e Parâmetros Padrão
+#As funções são declaradas com a palavra-chave def.
+
+def calcular_consumo(potencia_watts: float, horas_uso: float = 24.0) -> float:
+    """Calcula o consumo energético em Quilowatt-hora (kWh)."""
+    kwh = (potencia_watts * horas_uso) / 1000
+    return kwh
+
+# Chamada posicional
+total_a = calcular_consumo(650.0, 8.0)
+
+# Chamada usando valor padrão do parâmetro
+total_padrao = calcular_consumo(450.0)
+
+print(f"Consumo A: {total_a} kWh | Consumo Padrão (24h): {total_padrao} kWh")
+
+
+"""MÓDULO 2: NÍVEL INTERMEDIÁRIO (Estruturas Idiomáticas e POO)
+Neste nível, exploram-se os recursos que tornam o código expressivo (Pythonic), 
+o tratamento seguro de exceções e a Programação Orientada a Objetos.
+"""
+#2.1 Comprehensions (List, Dict e Set)
+#São formas declarativas e otimizadas em C de construir novas coleções sem criar laços imperativos vazios.
+
+leituras_brutas = [12.4, 25.1, -999.0, 18.7, 30.2, -999.0]
+
+# List Comprehension filtrando ruídos de sensor (-999.0) e convertendo para inteiro
+leituras_validas = [int(x) for x in leituras_brutas if x > 0]
+print(leituras_validas)  # [12, 25, 18, 30]
+
+# Dict Comprehension mapeando ID do nó para o status inicial
+nos_rede = ["no_norte", "no_sul", "no_leste"]
+tabela_status = {no: "STANDBY" for no in nos_rede}
+print(tabela_status)
+# {'no_norte': 'STANDBY', 'no_sul': 'STANDBY', 'no_leste': 'STANDBY'}
+
+
+#2.2 Tratamento Robusto de Exceções (try, except, else, finally)
+#Garante resiliência e liberação determinística de recursos em caso de falhas.
+
+def converter_telemetria(dado_bruto: str) -> float:
+    try:
+        valor = float(dado_bruto)
+        resultado = 100.0 / valor
+    except ValueError as err:
+        print(f"Erro de Parse: Não foi possível converter '{dado_bruto}' -> {err}")
+        return 0.0
+    except ZeroDivisionError:
+        print("Erro Crítico: Divisão por zero detectada na telemetria.")
+        return 0.0
+    else:
+        # Executa apenas se o bloco try teve 100% de sucesso
+        print("Cálculo realizado com sucesso.")
+        return resultado
+    finally:
+        # Sempre executa (útil para fechar sockets, cursores ou arquivos)
+        print("Finalização da rotina de conversão.")
+
+print(converter_telemetria("25.0"))
+print(converter_telemetria("corrompido"))
+
+
+#2.3 Desempacotamento de Argumentos (*args e **kwargs)
+#Permite criar funções flexíveis que aceitam uma quantidade variável de argumentos posicionais e nomeados.
+
+def registrar_evento(nivel: str, *mensagens, **metadados):
+    """
+    *mensagens agrupa argumentos extras em uma tupla.
+    **metadados agrupa argumentos chave-valor extras em um dicionário.
+    """
+    texto_consolidado = " | ".join(mensagens)
+    print(f"[{nivel.upper()}] {texto_consolidado}")
+    
+    for chave, valor in metadados.items():
+        print(f"  -> Contexto: {chave} = {valor}")
+
+registrar_evento(
+    "Warning", 
+    "Pacote descartado", "Checksum inválido", 
+    interface="eth0", ip_origem="172.30.21.180", tentativas=3
+)
+
+
+#2.4 Programação Orientada a Objetos (POO) com Encapsulamento e Propriedades
+#O decorador @property permite controlar o acesso a variáveis protegidas sem quebrar a interface pública da classe.
+
+class ServidorBlade:
+    def __init__(self, hostname: str, slots_ram: int):
+        self.hostname = hostname               # Atributo público
+        self._slots_ram = slots_ram            # Atributo protegido (convenção: _)
+        self.__voltagem_atual = 220.0          # Atributo privado (name mangling: __)
+
+    @property
+    def slots_ram(self) -> int:
+        """Getter para o total de slots."""
+        return self._slots_ram
+
+    @slots_ram.setter
+    def slots_ram(self, quantidade: int):
+        """Setter com validação de regra de negócio."""
+        if quantidade <= 0:
+            raise ValueError("O servidor precisa ter pelo menos 1 slot de RAM.")
+        self._slots_ram = quantidade
+
+    def __str__(self) -> str:
+        """Representação amigável em string."""
+        return f"ServidorBlade(hostname='{self.hostname}', slots={self._slots_ram})"
+
+blade = ServidorBlade("CMM-SRV-BL01", 16)
+print(blade)
+blade.slots_ram = 32  # Executa o setter com validação
+# blade.slots_ram = -4  # Dispararia ValueError
+
+
+#2.5 Gerenciadores de Contexto (with)
+#Garantem abertura e fechamento automático de arquivos ou conexões sem vazamentos de descritores de sistema operacional.
+
+# Escrita segura em arquivo
+caminho_log = "sistema.log"
+
+with open(caminho_log, mode="w", encoding="utf-8") as arquivo:
+    arquivo.write("2026-09-06T18:00:00 - Inicialização do nó operacional.\n")
+    arquivo.write("2026-09-06T18:01:15 - Conexão estabelecida com sucesso.\n")
+
+# O arquivo é automaticamente fechado aqui, mesmo que ocorra uma exceção
+
+
+"""
+MÓDULO 3: NÍVEL COMPLEXO (Metaprogramação, Concorrência e Engenharia)
+Neste estágio, abordam-se técnicas de computação assíncrona, 
+metaprogramação através de decoradores avançados, geradores com avaliação preguiçosa (lazy evaluation) e métodos mágicos de modelo de dados."""
+
+# 3.1 Geradores e Avaliação Preguiçosa (yield)
+# Geradores processam fluxos de dados massivos linha por linha na memória RAM (Big Data), 
+# consumindo espaço constante $\mathcal{O}(1)$ em vez de carregar tudo em listas $\mathcal{O}(N)$.
+
+from typing import Generator, Tuple
+
+def stream_telemetria_iot(limite_leituras: int) -> Generator[Tuple[int, float], None, None]:
+    """Gera leituras sob demanda sem alocar todas na memória."""
+    import random
+    contador = 1
+    while contador <= limite_leituras:
+        leitura_simulada = round(20.0 + random.uniform(-1.5, 3.5), 2)
+        yield (contador, leitura_simulada)  # Suspende e retoma a execução
+        contador += 1
+
+# O loop consome um item por vez da memória
+fluxo = stream_telemetria_iot(limite_leituras=5)
+for seq, valor in fluxo:
+    print(f"Buffer processando pacote [{seq}]: {valor}°C")
+
+
+#3.2 Decoradores Parametrizados e Metaprogramação
+
+# Decoradores modificam ou ampliam o comportamento de funções 
+# em tempo de compilação/execução. Um decorador parametrizado 
+# envolve três níveis de aninhamento de funções e preservação de metadados com functools.wraps.
+
+import functools
+import time
+from typing import Callable, Any
+
+def retry_resiliente(max_tentativas: int = 3, intervalo_segundos: float = 1.0):
+    """Decorador avançado que implementa política de retentativa automática."""
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            tentativas_atuais = 0
+            while tentativas_atuais < max_tentativas:
+                try:
+                    return func(*args, **kwargs)
+                except Exception as erro:
+                    tentativas_atuais += 1
+                    print(f"[Falha {tentativas_atuais}/{max_tentativas}] na função '{func.__name__}': {erro}")
+                    if tentativas_atuais >= max_tentativas:
+                        print(f"Limite excedido. Disparando exceção para montante.")
+                        raise
+                    time.sleep(intervalo_segundos)
+        return wrapper
+    return decorator
+
+# Aplicação do decorador parametrizado
+@retry_resiliente(max_tentativas=3, intervalo_segundos=0.5)
+def conectar_banco_dados(host: str) -> str:
+    import random
+    if random.choice([True, False]):
+        raise ConnectionRefusedError(f"Host '{host}' recusou a conexão TCP.")
+    return f"Conectado com sucesso a {host}"
+
+# Teste controlado
+try:
+    status = conectar_banco_dados("192.168.1.10")
+    print(status)
+except ConnectionRefusedError:
+    print("Tratamento de contingência ativado.")
+
+
+#3.3 Gerenciador de Contexto Customizado via Protocolo Dunder (__enter__ e __exit__)
+
+#Construção de classes capazes de gerenciar estados complexos, como transações atômicas de banco de dados ou travas de concorrência.
+
+class TransacaoSimulada:
+    def __init__(self, identificador: str):
+        self.identificador = identificador
+        self.em_aberto = False
+
+    def __enter__(self):
+        """Prepara o recurso e inicia o bloco."""
+        self.em_aberto = True
+        print(f"\n[TRANS] Início da transação '{self.identificador}'. Lock adquirido.")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Finaliza a transação. 
+        Se exc_type não for None, ocorreu um erro no bloco 'with'.
+        """
+        self.em_aberto = False
+        if exc_type is not None:
+            print(f"[TRANS] ROLLBACK executado para '{self.identificador}'. Erro capturado: {exc_val}")
+            # Retornar True suprime a exceção; retornar False permite que ela suba na pilha
+            return False
+        
+        print(f"[TRANS] COMMIT realizado com sucesso para '{self.identificador}'.")
+        return True
+
+# Cenário 1: Sucesso
+with TransacaoSimulada("TX-001") as tx:
+    print("  -> Atualizando registros da tabela 'usuarios'...")
+
+# Cenário 2: Falha com Rollback
+try:
+    with TransacaoSimulada("TX-002") as tx:
+        print("  -> Gravando dados de pagamento...")
+        raise ValueError("Chave de idempotência duplicada!")
+except ValueError:
+    print("[APP] Fluxo principal lidando com o erro após o rollback da transação.")
+
+
+# 3.4 Programação Assíncrona de Alta Concorrência (asyncio)
+# O paradigma assíncrono resolve problemas limitados por Entrada/Saída (I/O-Bound) através de um laço de eventos (Event Loop), 
+# permitindo que um único thread processe milhares de requisições concorrentes sem a sobrecarga de context-switch de threads do sistema operacional.
+
+import asyncio
+from typing import Dict
+
+async def fetch_dados_sensor(sensor_id: str, tempo_resposta: float) -> Dict[str, Any]:
+    """Simula consulta de rede a um microcontrolador IoT."""
+    print(f"Iniciando requisição ao sensor {sensor_id}...")
+    await asyncio.sleep(tempo_resposta)  # Pausa não bloqueante
+    print(f"Dados recebidos do sensor {sensor_id}!")
+    return {"sensor": sensor_id, "status": "ONLINE", "leitura": 24.8}
+
+async def pipeline_central():
+    """Executa chamadas concorrentes usando asyncio.gather."""
+    print("--- Disparando leituras concorrentes via Event Loop ---")
+    
+    tarefas = [
+        fetch_dados_sensor("TEMP_01", 1.2),
+        fetch_dados_sensor("PRESS_02", 0.8),
+        fetch_dados_sensor("FLOW_03", 0.5)
+    ]
+    
+    # As três requisições correm em paralelo no Event Loop
+    resultados = await asyncio.gather(*tarefas)
+    
+    print("\n--- Resultados Consolidados ---")
+    for res in resultados:
+        print(res)
+
+# Para rodar no terminal puro:
+# asyncio.run(pipeline_central())
+
+# Se estiver em ambientes como Jupyter/Colab (que já possuem event loop ativo):
+# await pipeline_central()
+
+
+#3.5 Métodos Mágicos e Sobrecarga de Operadores (Data Model)
+#O Python permite que classes personalizadas se comportem como tipos nativos através do seu protocolo de Dunder Methods (Double Underscores).
+
+class VetorDimensional:
+    """Implementa operações vetoriais sobrecarregando operadores matemáticos."""
+    
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def __repr__(self) -> str:
+        """Representação formal de desenvolvimento."""
+        return f"VetorDimensional(x={self.x}, y={self.y})"
+
+    def __add__(self, outro: 'VetorDimensional') -> 'VetorDimensional':
+        """Sobrecarga do operador de adição (+)."""
+        if not isinstance(outro, VetorDimensional):
+            return NotImplemented
+        return VetorDimensional(self.x + outro.x, self.y + outro.y)
+
+    def __mul__(self, escalar: float) -> 'VetorDimensional':
+        """Sobrecarga da multiplicação por escalar (*)."""
+        if not isinstance(escalar, (int, float)):
+            return NotImplemented
+        return VetorDimensional(self.x * escalar, self.y * escalar)
+
+    def __eq__(self, outro: object) -> bool:
+        """Sobrecarga do operador de igualdade (==)."""
+        if not isinstance(outro, VetorDimensional):
+            return False
+        return self.x == outro.x and self.y == outro.y
+
+v1 = VetorDimensional(2.0, 3.5)
+v2 = VetorDimensional(4.0, 1.5)
+
+# Soma vetorial limpa e expressiva
+v3 = v1 + v2
+print(v3)          # VetorDimensional(x=6.0, y=5.0)
+
+# Multiplicação por escalar
+v4 = v1 * 3
+print(v4)          # VetorDimensional(x=6.0, y=10.5)
+
+# Verificação de igualdade
+print(v1 == VetorDimensional(2.0, 3.5))  # True
