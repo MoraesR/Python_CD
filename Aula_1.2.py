@@ -6,9 +6,3 @@ lista.extend([5, 6])
 lista.remove('spam')
 lista.sort
 print(lista)
-
-
-t[1:3]
-t[:4]
-t[::-1]
-print(t)
