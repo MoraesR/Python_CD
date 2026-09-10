@@ -9,3 +9,26 @@ A temperatura aumentou. Atualize o valor de "temp_celsius" para 30.2.
 Adicione uma nova chave chamada "status_bateria" com o valor "Normal".
 Imprima o dicionário completo e, em seguida, imprima apenas as chaves usando o método .keys().
 """
+
+
+
+
+estacao = {
+    "id": "AM-01",
+    "local": "Reserva Ducke",
+    "temp_celsius": 28.5,
+    "umidade_pct": 78
+}
+
+
+estacao["temp_celsius"] = 30.2
+
+
+estacao["status_bateria"] = "Normal"
+
+
+print("Dicionário completo:")
+print(estacao)
+print("\nApenas as chaves disponíveis:")
+print(list(estacao.keys()))
+
