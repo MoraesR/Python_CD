@@ -23,8 +23,15 @@ print(munic)
 
 
 #agora vou inserir utilizando o insert e escolhendo o local na lista
-munic.insert(0, "Sao Gabriel")
+munic.insert(4, "Sao Gabriel")
 print(munic)
 
 munic.insert(3, "Iranduba")
 print(munic)
+
+
+munic.extend(["Barcelos", "Humaitá", "Lábrea"]) #aqui eu vou adicionar mais cidades na lista
+print(munic)
+
+
+

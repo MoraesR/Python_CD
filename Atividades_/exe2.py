@@ -12,3 +12,5 @@ print(coordenadas)
 
 lat, lon = coordenadas
 print(f"A latitude registrada é {lat} e a longitude é {lon}.")
+
+

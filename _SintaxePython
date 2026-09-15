@@ -5,7 +5,7 @@ e estudantes de Ciência da Computação e Inteligência Artificial através dos
 transitando progressivamente para padrões intermediários e soluções de nível avançado de engenharia de software."""
 
 """
-MÓDULO 1: NÍVEL BÁSICO (Fundamentos e Controle de Fluxo)
+MÓDULO 1: NÍVEL BÁSICO
 O Python é uma linguagem de tipagem dinâmica, forte e orientada a objetos, 
 cuja principal característica visual é o uso de indentação obrigatória (geralmente 4 espaços) para delimitar blocos lógicos, 
 eliminando chaves {} ou palavras-chave como begin/end.
