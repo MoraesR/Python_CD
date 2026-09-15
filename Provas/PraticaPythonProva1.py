@@ -18,3 +18,12 @@ rotas_entregadores = {'Ana': 15, 'Carlos': 22, 'Joao': 18}
 entregador_top = entregador_mais_eficiente(rotas_entregadores)
 print("Entregador que realizou mais rotas:", entregador_top)
 
+"""Questao 4. Escreva um codigo que conte a frequencia de diferentes tipos de bugs encontrados em um teste de jogo e armazene o resultado em um dicionario. Dados de entrada: lista_bugs = ['crash', 'lag', 'crash', 'audio', 'lag', 'crash']."""
+
+
+
+
+"""Questao 5. Crie uma funcao matematica simples que receba uma lista de valores numericos representando a velocidade de veiculos de uma frota e retorne a media aritmetica simples desses valores. Dados de entrada: velocidades = [80, 90, 75, 100, 85]."""
+
+
+
